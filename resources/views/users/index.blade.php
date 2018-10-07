@@ -1,0 +1,25 @@
+@extends('layouts.articles')
+
+@section('title')
+    User List - @parent
+@stop
+
+@section('bgimg')img/about-bg.jpg @stop
+
+@section('site-heading')
+    <div class="site-heading">
+        <h1>User List</h1>
+    </div>
+@stop
+
+@section('container')
+    <div class="row user-body">
+        @foreach($users as $user)
+            <div class="col-md-2 col-xs-3 avatar-area mb-15">
+                <a href="/user/{{ $user->id }}" data-toggle="tooltip" title="{{ $user->name }}">
+                    <img class="img-circle img-thumbnail avatar-60" src="{{ getAvarar($user->email, 60) }}">
+                </a>
+            </div>
+        @endforeach
+    </div>
+@stop

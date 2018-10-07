@@ -1,0 +1,64 @@
+@extends('layouts.users')
+
+@section('title'){{$user->name}}Recycle bin - @parent @stop
+
+@section('container')
+    @include('users._rightnav')
+    <div class="panel-body remove-pd-h">
+        @if(count($articles))
+            @if($currentUser && $currentUser->id == $user->id)
+                <div class="alert alert-info text-center clearfix">
+                You can click "Show" to change whether the article is displayed in the foreground list.
+                </div>
+            @endif
+            <ul class="list-group">
+                @foreach($articles as $article)
+                    <li class="list-group-item clearfix article" data-id="{{ $article->id }}">
+                        <a href="javascript:;">{{ $article->title }}</a>
+                        <span class="user-articles-meta">
+                            <span class="pull-right">
+                                <i class="fa fa-calendar"></i> {{ $article->deleted_at->diffForHumans() }}
+                                @can('destroy', $article)
+                                    <label class="opt" data-toggle="modal" data-target="#trashArticleUserCenter" data-title="{{ $article->title }}" data-id="{{ $article->id }}" data-action="restore"><i class="fa fa-recycle"></i> restore</label>
+                                @endcan
+                                @can('destroy', $article)
+                                    <label class="opt text-danger" data-toggle="modal" data-target="#trashArticleUserCenter" data-title="{{ $article->title }}" data-id="{{ $article->id }}" data-action="forceDelete"><i class="fa fa-trash-o"></i> Remove completely</label>
+                                @endcan
+                            </span>
+                        </span>
+                    </li>
+                @endforeach
+                {!! $articles->render() !!}
+            </ul>
+            <div class="modal fade" id="trashArticleUserCenter" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title" id="myModalLabel">Modal title</h4>
+                        </div>
+                        <div class="modal-body">
+                            <input type="hidden" name="id" value="">
+                            <input type="hidden" name="action" value="">
+                            <p class="text-danger text-center noticeMsg"></p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-danger articleOptBtn" onclick="articleRestoreOrDelete()" data-dismiss="modal">Yes</button>
+                            <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        @else
+            <div class="alert alert-warning text-center">
+                暂无文章
+            </div>
+        @endif
+    </div>
+@stop
+
+@section('footer')
+    <script type="text/javascript">
+
+    </script>
+@stop
